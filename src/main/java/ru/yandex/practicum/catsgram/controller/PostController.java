@@ -31,7 +31,7 @@ public class PostController {
     }
 
     @PostMapping(value = "/post")
-    public Post create(@RequestBody Post post) throws UserNotFoundException {
+    public Post create(@RequestBody Post post) {
         log.debug("Получен пост для создания: {}", post);
         return postService.create(post);
     }

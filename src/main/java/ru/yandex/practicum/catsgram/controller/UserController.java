@@ -29,13 +29,13 @@ public class UserController {
     }
 
     @PostMapping()
-    public User createUser(@RequestBody User user) throws UserAlreadyExistException, InvalidEmailException {
+    public User createUser(@RequestBody User user) {
         log.debug("Получен пользователь для создания: {}", user);
         return userService.createUser(user);
     }
 
     @PutMapping()
-    public User updateUser(@RequestBody User user) throws InvalidEmailException {
+    public User updateUser(@RequestBody User user) {
         log.debug("Получен пользователь для обновления: {}", user);
         return userService.updateUser(user);
     }

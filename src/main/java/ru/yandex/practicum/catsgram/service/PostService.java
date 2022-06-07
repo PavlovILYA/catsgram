@@ -26,7 +26,7 @@ public class PostService {
         return posts;
     }
 
-    public Post create(Post post) throws UserNotFoundException {
+    public Post create(Post post) {
         if (userService.findUserByEmail(post.getAuthor()) == null) {
             throw new UserNotFoundException("Пользователь с почтой " + post.getAuthor() + " не найден");
         }
