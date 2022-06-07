@@ -2,40 +2,41 @@ package ru.yandex.practicum.catsgram.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
 import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
 import ru.yandex.practicum.catsgram.model.User;
-import java.util.HashSet;
+import ru.yandex.practicum.catsgram.service.UserService;
+
 import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
-    private final Set<User> users = new HashSet<>();
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping()
     public Set<User> getUsers() {
-        log.debug("Текущее количество пользователей {}", users.size());
-        return users;
+        log.debug("Запрошен список пользователей. Количество: {}", userService.getUsersAmount());
+        return userService.getUsers();
     }
 
     @PostMapping()
     public User createUser(@RequestBody User user) throws UserAlreadyExistException, InvalidEmailException {
-        if (users.contains(user)) {
-            throw new UserAlreadyExistException("Пользователь уже существует!");
-        }
-        return updateUser(user);
+        log.debug("Получен пользователь для создания: {}", user);
+        return userService.createUser(user);
     }
 
     @PutMapping()
     public User updateUser(@RequestBody User user) throws InvalidEmailException {
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new InvalidEmailException("Email пользователя содержит недопустимое значение!");
-        }
-        users.add(user);
-        log.debug("Добавленный/обновленный пользователь: {}", user);
-        return user;
+        log.debug("Получен пользователь для обновления: {}", user);
+        return userService.updateUser(user);
     }
 }
