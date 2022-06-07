@@ -4,11 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
+import ru.yandex.practicum.catsgram.exception.WrongRequestParamException;
 import ru.yandex.practicum.catsgram.model.Post;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -21,9 +26,25 @@ public class PostService {
         this.userService = userService;
     }
 
-    public List<Post> findAll() {
-        log.debug("Текущее количество постов: {}", posts.size());
-        return posts;
+    public List<Post> findAll(int size, String sort, int from) {
+        if (size <= 0 || from <= 0 || (!sort.equals("asc") && !sort.equals("desc"))) {
+            throw new WrongRequestParamException("Неверные параметры: " + size + " " + sort + " " + from);
+        }
+        Comparator<Post> comparator = Comparator.comparing(Post::getCreationDate).reversed();
+        if (sort.equals("asc")) {
+            comparator = comparator.reversed();
+        }
+        return posts.stream()
+                .sorted(comparator)
+                .skip(from-1)
+                .limit(size)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Post> getPostById(int postId) {
+        return posts.stream()
+                .filter(post -> (post.getId() == postId))
+                .findFirst();
     }
 
     public Post create(Post post) {

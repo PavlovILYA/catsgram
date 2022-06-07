@@ -24,9 +24,11 @@ public class PostController {
     }
 
     @GetMapping()
-    public List<Post> findAll() {
-        log.debug("Запрошен список постов. Количество: {}", postService.getPostsAmount());
-        return postService.findAll();
+    public List<Post> findAll(@RequestParam(name = "size", defaultValue = "10") int size,
+                              @RequestParam(name = "sort", defaultValue = "desc") String sort,
+                              @RequestParam(name = "from", defaultValue = "1") int from) {
+        log.debug("Запрошен список постов. Параметры: size={} sort={} from={}", size, sort, from);
+        return postService.findAll(size, sort, from);
     }
 
     @PostMapping()
@@ -38,9 +40,6 @@ public class PostController {
     @GetMapping("/{id}")
     public Optional<Post> getPostById(@PathVariable("id") int postId) {
         log.debug("Запрошен пост: {}", postId);
-        return postService.findAll()
-                .stream()
-                .filter(post -> (post.getId() == postId))
-                .findFirst();
+        return postService.getPostById(postId);
     }
 }
