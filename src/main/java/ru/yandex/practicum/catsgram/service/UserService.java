@@ -26,14 +26,14 @@ public class UserService {
         return new HashSet<>(users.values());
     }
 
-    public User createUser(@RequestBody User user) throws UserAlreadyExistException, InvalidEmailException {
+    public User createUser(@RequestBody User user) {
         if (users.containsKey(user.getEmail())) {
             throw new UserAlreadyExistException("Пользователь уже существует!");
         }
         return updateUser(user);
     }
 
-    public User updateUser(User user) throws InvalidEmailException {
+    public User updateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new InvalidEmailException("Email пользователя содержит недопустимое значение!");
         }
