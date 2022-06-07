@@ -39,4 +39,9 @@ public class UserController {
         log.debug("Получен пользователь для обновления: {}", user);
         return userService.updateUser(user);
     }
+
+    @GetMapping("/{email:.+}")
+    public User findUserByEmail(@PathVariable("email") String userEmail) {
+        return userService.findUserByEmail(userEmail);
+    }
 }
