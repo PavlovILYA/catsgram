@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 public class PostController {
     private static final Logger log = LoggerFactory.getLogger(PostController.class);
-
     private final PostService postService;
 
     @Autowired
@@ -26,14 +25,13 @@ public class PostController {
 
     @GetMapping("/posts")
     public List<Post> findAll() {
-        log.debug("Текущее количество постов: {}", postService.getPostsAmount());
+        log.debug("Запрошен список постов. Количество: {}", postService.getPostsAmount());
         return postService.findAll();
     }
 
     @PostMapping(value = "/post")
     public Post create(@RequestBody Post post) {
-        log.debug("Пост: {}", post);
-        postService.create(post);
-        return post;
+        log.debug("Получен пост для создания: {}", post);
+        return postService.create(post);
     }
 }
