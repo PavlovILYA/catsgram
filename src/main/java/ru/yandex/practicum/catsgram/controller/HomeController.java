@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class SimpleController {
-    private static final Logger log = LoggerFactory.getLogger(SimpleController.class);
+public class HomeController {
+    private static final Logger log = LoggerFactory.getLogger(HomeController.class);
 
     @GetMapping("/home")
     public String homePage() {
