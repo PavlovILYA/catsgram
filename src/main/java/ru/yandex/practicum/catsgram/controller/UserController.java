@@ -42,6 +42,7 @@ public class UserController {
 
     @GetMapping("/{email:.+}")
     public User findUserByEmail(@PathVariable("email") String userEmail) {
+        log.debug("Запрошен пользователь: {}", userEmail);
         return userService.findUserByEmail(userEmail);
     }
 }
