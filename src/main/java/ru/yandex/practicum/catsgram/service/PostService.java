@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
 import ru.yandex.practicum.catsgram.exception.WrongRequestParamException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.model.PostFeedParams;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -51,6 +52,18 @@ public class PostService {
         log.debug("Пост: {}", post);
         posts.add(post);
         return post;
+    }
+
+    public List<Post> getNews(PostFeedParams postFeedParams) {
+        Comparator<Post> comparator = Comparator.comparing(Post::getCreationDate).reversed();
+        if (postFeedParams.getSort().equals("asc")) {
+            comparator = comparator.reversed();
+        }
+        return posts.stream()
+                .sorted(comparator)
+                .filter(post -> postFeedParams.getFriends().contains(post.getAuthor()))
+                .limit(postFeedParams.getSize())
+                .collect(Collectors.toList());
     }
 
     public int getPostsAmount() {
