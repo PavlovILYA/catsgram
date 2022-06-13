@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.model.PostFeedParams;
@@ -37,10 +38,11 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Post> getPostById(int postId) {
+    public Post getPostById(int postId) {
         return posts.stream()
                 .filter(post -> (post.getId() == postId))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new PostNotFoundException(String.format("Пост № %d не найден", postId)));
     }
 
     public Post create(Post post) {

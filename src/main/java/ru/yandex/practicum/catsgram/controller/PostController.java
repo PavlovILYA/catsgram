@@ -45,12 +45,8 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public Optional<Post> getPostById(@PathVariable("id") int postId) {
+    public Post getPostById(@PathVariable("id") int postId) {
         log.debug("Запрошен пост: {}", postId);
-        Optional<Post> response = postService.getPostById(postId);
-        if (response.isEmpty()) {
-            throw new PostNotFoundException("Пост не найден");
-        }
-        return response;
+        return postService.getPostById(postId);
     }
 }
