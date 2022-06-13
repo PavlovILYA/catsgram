@@ -4,10 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
-import ru.yandex.practicum.catsgram.exception.WrongRequestParamException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.model.PostFeedParams;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -38,10 +38,11 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Post> getPostById(int postId) {
+    public Post getPostById(int postId) {
         return posts.stream()
                 .filter(post -> (post.getId() == postId))
-                .findFirst();
+                .findFirst()
+                .orElseThrow(() -> new PostNotFoundException(String.format("Пост № %d не найден", postId)));
     }
 
     public Post create(Post post) {
@@ -51,6 +52,18 @@ public class PostService {
         log.debug("Пост: {}", post);
         posts.add(post);
         return post;
+    }
+
+    public List<Post> getNews(PostFeedParams postFeedParams) {
+        Comparator<Post> comparator = Comparator.comparing(Post::getCreationDate).reversed();
+        if (postFeedParams.getSort().equals("asc")) {
+            comparator = comparator.reversed();
+        }
+        return posts.stream()
+                .sorted(comparator)
+                .filter(post -> postFeedParams.getFriends().contains(post.getAuthor()))
+                .limit(postFeedParams.getSize())
+                .collect(Collectors.toList());
     }
 
     public int getPostsAmount() {
