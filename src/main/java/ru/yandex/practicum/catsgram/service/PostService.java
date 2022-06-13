@@ -27,16 +27,13 @@ public class PostService {
     }
 
     public List<Post> findAll(int size, String sort, int from) {
-        if (size <= 0 || from <= 0 || (!sort.equals("asc") && !sort.equals("desc"))) {
-            throw new WrongRequestParamException("Неверные параметры: " + size + " " + sort + " " + from);
-        }
         Comparator<Post> comparator = Comparator.comparing(Post::getCreationDate).reversed();
         if (sort.equals("asc")) {
             comparator = comparator.reversed();
         }
         return posts.stream()
                 .sorted(comparator)
-                .skip(from-1)
+                .skip((long) (from - 1) * size)
                 .limit(size)
                 .collect(Collectors.toList());
     }

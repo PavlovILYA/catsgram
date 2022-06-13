@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
+import ru.yandex.practicum.catsgram.exception.WrongRequestParamException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
@@ -28,6 +29,9 @@ public class PostController {
                               @RequestParam(name = "sort", defaultValue = "desc") String sort,
                               @RequestParam(name = "from", defaultValue = "1") int from) {
         log.debug("Запрошен список постов. Параметры: size={} sort={} from={}", size, sort, from);
+        if (size <= 0 || from <= 0 || (!sort.equals("asc") && !sort.equals("desc"))) {
+            throw new WrongRequestParamException("Неверные параметры: " + size + " " + sort + " " + from);
+        }
         return postService.findAll(size, sort, from);
     }
 
