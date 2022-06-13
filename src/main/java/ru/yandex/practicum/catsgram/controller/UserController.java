@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
 import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
+import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
@@ -43,6 +44,10 @@ public class UserController {
     @GetMapping("/{email:.+}")
     public User findUserByEmail(@PathVariable("email") String userEmail) {
         log.debug("Запрошен пользователь: {}", userEmail);
-        return userService.findUserByEmail(userEmail);
+        User user = userService.findUserByEmail(userEmail);
+        if (user == null) {
+            throw new UserNotFoundException("Не найден((");
+        }
+        return user;
     }
 }
