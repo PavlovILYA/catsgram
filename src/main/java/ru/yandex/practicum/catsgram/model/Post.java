@@ -1,17 +1,26 @@
 package ru.yandex.practicum.catsgram.model;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 public class Post {
     private Integer id;
-    private final String author;
-    private final Instant creationDate = Instant.now();
+    private final User author;
+    private final LocalDate creationDate;
     private String description;
     private String photoUrl;
 
-    public Post(Integer id, String author, String description, String photoUrl) {
+    public Post(User author, String description, String photoUrl) {
+        this.author = author;
+        this.description = description;
+        this.photoUrl = photoUrl;
+        this.creationDate = LocalDate.now();
+    }
+
+    public Post(Integer id, User author, LocalDate creationDate, String description, String photoUrl) {
         this.id = id;
         this.author = author;
+        this.creationDate = creationDate;
         this.description = description;
         this.photoUrl = photoUrl;
     }
@@ -20,16 +29,15 @@ public class Post {
         return id;
     }
 
-    public Post setId(Integer id) {
+    public void setId(Integer id) {
         this.id = id;
-        return this;
     }
 
-    public String getAuthor() {
+    public User getAuthor() {
         return author;
     }
 
-    public Instant getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
@@ -47,15 +55,5 @@ public class Post {
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
-    }
-
-    @Override
-    public String toString() {
-        return "Post{" +
-                "author='" + author + '\'' +
-                ", creationDate=" + creationDate +
-                ", description='" + description + '\'' +
-                ", photoUrl='" + photoUrl + '\'' +
-                '}';
     }
 }

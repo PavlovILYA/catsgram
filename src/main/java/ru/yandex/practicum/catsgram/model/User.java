@@ -4,16 +4,22 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class User {
-    private String email;
+    private String id;
+    private String username;
     private String nickname;
-    private LocalDate birthdate;
 
-    public String getEmail() {
-        return email;
+    public User(String id, String username, String nickname) {
+        this.id = id;
+        this.username = username;
+        this.nickname = nickname;
     }
 
-    public User setEmail(String email) {
-        this.email = email;
+    public String getId() {
+        return id;
+    }
+
+    public User setId(String id) {
+        this.id = id;
         return this;
     }
 
@@ -26,12 +32,12 @@ public class User {
         return this;
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
+    public String getUsername() {
+        return username;
     }
 
-    public User setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+    public User setUsername(String username) {
+        this.username = username;
         return this;
     }
 
@@ -40,20 +46,20 @@ public class User {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return email.equals(user.email);
+        return id.equals(user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "email='" + email + '\'' +
+                "id='" + id + '\'' +
                 ", nickname='" + nickname + '\'' +
-                ", birthdate=" + birthdate +
+                ", username=" + username +
                 '}';
     }
 }
