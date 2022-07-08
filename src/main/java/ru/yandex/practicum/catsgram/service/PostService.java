@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.catsgram.dao.FollowDao;
 import ru.yandex.practicum.catsgram.dao.PostDao;
 import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
 import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
@@ -16,18 +17,19 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class PostService {
     private static final Logger log = LoggerFactory.getLogger(PostService.class);
     private final PostDao postDao;
+    private final FollowDao followDao;
     private final UserService userService;
     private final List<Post> posts = new ArrayList<>();
 
     @Autowired
-    public PostService(PostDao postDao, UserService userService) {
+    public PostService(PostDao postDao, FollowDao followDao, UserService userService) {
         this.postDao = postDao;
+        this.followDao = followDao;
         this.userService = userService;
     }
 
@@ -91,5 +93,13 @@ public class PostService {
                 .sorted(comparator)
                 .limit(size)
                 .collect(Collectors.toList());
+    }
+
+    public List<Post> getFollowFeed(String userId, int size) {
+        return followDao.getFollowFeed(userId, size);
+    }
+
+    public List<Post> getFollowFeed2(String userId, int size) {
+        return followDao.getFollowFeed2(userId, size);
     }
 }
