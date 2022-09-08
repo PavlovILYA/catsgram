@@ -1,52 +1,22 @@
 package ru.yandex.practicum.catsgram.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
-import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
+import ru.yandex.practicum.catsgram.dao.UserDao;
 import ru.yandex.practicum.catsgram.model.User;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private static final Logger log = LoggerFactory.getLogger(UserService.class);
-    private final Map<String, User> users = new HashMap<>();
+    private final UserDao userDao;
 
-    public Set<User> getUsers() {
-        log.debug("Текущее количество пользователей {}", users.size());
-        return new HashSet<>(users.values());
+    @Autowired
+    public UserService(UserDao userDao) {
+        this.userDao = userDao;
     }
 
-    public User createUser(@RequestBody User user) {
-        if (users.containsKey(user.getEmail())) {
-            throw new UserAlreadyExistException("Пользователь уже существует!");
-        }
-        return updateUser(user);
-    }
-
-    public User updateUser(User user) {
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            throw new InvalidEmailException("Email пользователя содержит недопустимое значение!");
-        }
-        users.put(user.getEmail(), user);
-        log.debug("Добавленный/обновленный пользователь: {}", user);
-        return user;
-    }
-
-    public User findUserByEmail(String email) {
-        return users.getOrDefault(email, null);
-    }
-
-    public int getUsersAmount() {
-        return users.size();
+    public Optional<User> findUserById(String id) {
+        return userDao.findUserById(id);
     }
 }

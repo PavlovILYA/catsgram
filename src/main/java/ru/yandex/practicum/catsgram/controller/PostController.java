@@ -9,6 +9,7 @@ import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.service.PostService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,19 +25,26 @@ public class PostController {
     }
 
     @GetMapping()
-    public List<Post> findAll(@RequestParam(name = "size", defaultValue = "10") int size,
-                              @RequestParam(name = "sort", defaultValue = "desc") String sort,
-                              @RequestParam(name = "from", defaultValue = "1") int from) {
-        log.debug("Запрошен список постов. Параметры: size={} sort={} from={}", size, sort, from);
-        if (size <= 0) {
-            throw new IncorrectParameterException("size", "Недопустимое значение");
-        } else if (from <= 0) {
-            throw new IncorrectParameterException("from", "Недопустимое значение");
-        } else if (!sort.equals("asc") && !sort.equals("desc")) {
-            throw new IncorrectParameterException("sort", "Недопустимое значение");
-        }
-        return postService.findAll(size, sort, from);
+    public Collection<Post> findPostsByUser(@RequestParam(name = "userId") String userId,
+                                            @RequestParam(name = "size", defaultValue = "10") int size,
+                                            @RequestParam(name = "sort", defaultValue = "desc") String sort) {
+        return postService.findPostsByUser(userId, size, sort);
     }
+
+//    @GetMapping()
+//    public List<Post> findAll(@RequestParam(name = "size", defaultValue = "10") int size,
+//                              @RequestParam(name = "sort", defaultValue = "desc") String sort,
+//                              @RequestParam(name = "from", defaultValue = "1") int from) {
+//        log.debug("Запрошен список постов. Параметры: size={} sort={} from={}", size, sort, from);
+//        if (size <= 0) {
+//            throw new IncorrectParameterException("size", "Недопустимое значение");
+//        } else if (from <= 0) {
+//            throw new IncorrectParameterException("from", "Недопустимое значение");
+//        } else if (!sort.equals("asc") && !sort.equals("desc")) {
+//            throw new IncorrectParameterException("sort", "Недопустимое значение");
+//        }
+//        return postService.findAll(size, sort, from);
+//    }
 
     @PostMapping()
     public Post create(@RequestBody Post post) {
